@@ -4,6 +4,12 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 
+// 定义请求体类型
+interface CreateBoardRequest {
+  name: string
+  friend_id: string
+}
+
 // POST /api/boards - 创建共享看板
 export async function POST(request: Request) {
   const supabase = await createClient()
@@ -14,8 +20,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const body = await request.json()
-    const { name, friend_id } = body
+    const { name, friend_id } = await request.json() as CreateBoardRequest
 
     if (!name || !friend_id) {
       return NextResponse.json({ error: 'Name and friend_id are required' }, { status: 400 })

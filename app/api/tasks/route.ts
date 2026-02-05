@@ -1,11 +1,31 @@
 /**
  * 任务 API 路由 - 使用 SQL RPC
  */
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 
+// 定义请求体类型
+interface CreateTaskRequest {
+  title: string
+  description?: string
+  priority?: 'low' | 'medium' | 'high'
+  shared_board_id?: string
+  sort_order?: number
+}
+
+interface UpdateTaskRequest {
+  id: string
+  title?: string
+  description?: string
+  priority?: 'low' | 'medium' | 'high'
+  completed?: boolean
+  completed_at?: string
+  sort_order?: number
+}
+
+// POST /api/tasks - 创建任务
 export async function POST(request: Request) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   
   if (!user) {
@@ -13,8 +33,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const body = await request.json()
-    const { title, description, priority, shared_board_id, sort_order = 0 } = body
+    const { title, description, priority, shared_board_id, sort_order = 0 } = await request.json() as CreateTaskRequest
 
     if (!title || typeof title !== 'string') {
       return NextResponse.json({ error: 'Title is required' }, { status: 400 })
@@ -38,8 +57,9 @@ export async function POST(request: Request) {
   }
 }
 
+// PATCH /api/tasks - 更新任务
 export async function PATCH(request: Request) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   
   if (!user) {
@@ -47,8 +67,7 @@ export async function PATCH(request: Request) {
   }
 
   try {
-    const body = await request.json()
-    const { id, title, description, priority, completed, completed_at, sort_order } = body
+    const { id, title, description, priority, completed, completed_at, sort_order } = await request.json() as UpdateTaskRequest
 
     if (!id) {
       return NextResponse.json({ error: 'Task ID is required' }, { status: 400 })
@@ -82,8 +101,9 @@ export async function PATCH(request: Request) {
   }
 }
 
+// DELETE /api/tasks - 删除任务
 export async function DELETE(request: Request) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   
   if (!user) {
