@@ -18,7 +18,7 @@ interface DeleteFriendRequest {
 }
 
 // POST /api/friends - 发送好友请求
-export async function POST(request: Request) {
+export async function POST(req: Request) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   
@@ -27,7 +27,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { receiver_username } = await request.json() as SendFriendRequest
+    const body = await req.json() as SendFriendRequest
+    const { receiver_username } = body
 
     if (!receiver_username) {
       return NextResponse.json({ error: 'Username is required' }, { status: 400 })
@@ -37,7 +38,7 @@ export async function POST(request: Request) {
     const { data: request, error } = await supabase.rpc('send_friend_request', {
       p_sender_id: user.id as string,
       p_username: receiver_username,
-    } as { p_sender_id: string; p_username: string })
+    })
 
     if (error) {
       if (error.message.includes('not found')) {
@@ -53,7 +54,7 @@ export async function POST(request: Request) {
 }
 
 // PATCH /api/friends - 接受好友请求
-export async function PATCH(request: Request) {
+export async function PATCH(req: Request) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   
@@ -62,7 +63,8 @@ export async function PATCH(request: Request) {
   }
 
   try {
-    const { request_id } = await request.json() as AcceptFriendRequest
+    const body = await req.json() as AcceptFriendRequest
+    const { request_id } = body
 
     if (!request_id) {
       return NextResponse.json({ error: 'Request ID is required' }, { status: 400 })
@@ -72,14 +74,11 @@ export async function PATCH(request: Request) {
     const { data: result, error } = await supabase.rpc('accept_friend_request', {
       p_request_id: request_id,
       p_user_id: user.id as string,
-    } as { p_request_id: string; p_user_id: string })
+    })
 
     if (error) {
       if (error.message.includes('not found')) {
         return NextResponse.json({ error: 'Request not found or forbidden' }, { status: 404 })
-      }
-      if (error.message.includes('Forbidden')) {
-        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
       }
       throw error
     }
@@ -91,7 +90,7 @@ export async function PATCH(request: Request) {
 }
 
 // DELETE /api/friends - 删除好友
-export async function DELETE(request: Request) {
+export async function DELETE(req: Request) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   
@@ -99,7 +98,7 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { searchParams } = new URL(request.url)
+  const { searchParams } = new URL(req.url)
   const friend_id = searchParams.get('friend_id')
 
   if (!friend_id) {
@@ -111,17 +110,9 @@ export async function DELETE(request: Request) {
     const { error } = await supabase.rpc('delete_friend', {
       p_user_id: user.id as string,
       p_friend_id: friend_id,
-    } as { p_user_id: string; p_friend_id: string })
+    })
 
-    if (error) {
-      if (error.message.includes('not found')) {
-        return NextResponse.json({ error: 'Friend not found' }, { status: 404 })
-      }
-      if (error.message.includes('Forbidden')) {
-        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-      }
-      throw error
-    }
+    if (error) throw error
 
     return NextResponse.json({ success: true })
   } catch (error: any) {
