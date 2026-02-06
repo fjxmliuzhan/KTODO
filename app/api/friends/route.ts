@@ -34,9 +34,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Username is required' }, { status: 400 })
     }
 
-    // 使用 RPC
+    // 使用 RPC，显式类型转换
     const { data: request, error } = await supabase.rpc('send_friend_request', {
-      p_sender_id: user.id,
+      p_sender_id: String(user.id),
       p_username: receiver_username,
     })
 
@@ -70,18 +70,15 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ error: 'Request ID is required' }, { status: 400 })
     }
 
-    // 使用 RPC
+    // 使用 RPC，显式类型转换
     const { data: result, error } = await supabase.rpc('accept_friend_request', {
       p_request_id: request_id,
-      p_user_id: user.id,
+      p_user_id: String(user.id),
     })
 
     if (error) {
       if (error.message.includes('not found')) {
         return NextResponse.json({ error: 'Request not found or forbidden' }, { status: 404 })
-      }
-      if (error.message.includes('Forbidden')) {
-        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
       }
       throw error
     }
@@ -109,18 +106,15 @@ export async function DELETE(req: Request) {
   }
 
   try {
-    // 使用 RPC
+    // 使用 RPC，显式类型转换
     const { error } = await supabase.rpc('delete_friend', {
-      p_user_id: user.id,
+      p_user_id: String(user.id),
       p_friend_id: friend_id,
     })
 
     if (error) {
       if (error.message.includes('not found')) {
         return NextResponse.json({ error: 'Friend not found' }, { status: 404 })
-      }
-      if (error.message.includes('Forbidden')) {
-        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
       }
       throw error
     }
