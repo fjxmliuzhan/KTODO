@@ -26,6 +26,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  // 确保 user.id 存在
+  if (!user.id) {
+    return NextResponse.json({ error: 'User ID not found' }, { status: 500 })
+  }
+
   try {
     const body = await req.json() as SendFriendRequest
     const { receiver_username } = body
@@ -34,12 +39,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Username is required' }, { status: 400 })
     }
 
-    // 使用 RPC，确保 user.id 不是 undefined
-    const sender_id = user.id ?? ''
-    
-    // 使用 RPC 调用
+    // 使用 RPC，直接传递
     const { data: request, error } = await supabase.rpc('send_friend_request', {
-      p_sender_id: sender_id,
+      p_sender_id: user.id,
       p_username: receiver_username,
     })
 
@@ -71,6 +73,11 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  // 确保 user.id 存在
+  if (!user.id) {
+    return NextResponse.json({ error: 'User ID not found' }, { status: 500 })
+  }
+
   try {
     const body = await req.json() as AcceptFriendRequest
     const { request_id } = body
@@ -79,14 +86,10 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ error: 'Request ID is required' }, { status: 400 })
     }
 
-    // 确保参数不是 undefined
-    const p_user_id = user.id ?? ''
-    const p_request_id = request_id ?? ''
-    
-    // 使用 RPC 调用
+    // 使用 RPC，直接传递
     const { data: result, error } = await supabase.rpc('accept_friend_request', {
-      p_request_id: p_request_id,
-      p_user_id: p_user_id,
+      p_request_id: request_id,
+      p_user_id: user.id,
     })
 
     if (error) {
@@ -111,6 +114,11 @@ export async function DELETE(req: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  // 确保 user.id 存在
+  if (!user.id) {
+    return NextResponse.json({ error: 'User ID not found' }, { status: 500 })
+  }
+
   const { searchParams } = new URL(req.url)
   const friend_id = searchParams.get('friend_id')
 
@@ -119,14 +127,10 @@ export async function DELETE(req: Request) {
   }
 
   try {
-    // 确保参数不是 undefined
-    const p_user_id = user.id ?? ''
-    const p_friend_id = friend_id ?? ''
-    
-    // 使用 RPC 调用
+    // 使用 RPC，直接传递
     const { error } = await supabase.rpc('delete_friend', {
-      p_user_id: p_user_id,
-      p_friend_id: p_friend_id,
+      p_user_id: user.id,
+      p_friend_id: friend_id,
     })
 
     if (error) {
