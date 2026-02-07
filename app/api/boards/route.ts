@@ -28,9 +28,9 @@ export async function POST(request: Request) {
 
     // 使用 RPC（添加类型断言）
     const { data: board, error } = await supabase.rpc('create_shared_board', {
-      p_board_name: name.trim() as string,
-      p_user_id: user.id as string,
-      p_friend_id: friend_id as string,
+      p_board_name: name.trim(),
+      p_user_id: user.id,
+      p_friend_id: friend_id,
     } as any)
 
     if (error) {
