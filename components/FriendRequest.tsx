@@ -41,10 +41,18 @@ export default function FriendRequest({ onAccept }: FriendRequestProps) {
       .select('id, sender_id, profiles(username, full_name, avatar_url)')
       .eq('receiver_id', user.id)
       .eq('status', 'pending')
-      .innerJoin('profiles', 'friend_requests.sender_id', 'profiles.id')
       .order('created_at', { ascending: false })
 
-    setRequests(data || [])
+    setRequests((data || []).map(request => ({
+      id: request.id,
+      sender_id: request.sender_id,
+      profiles: {
+        id: request.sender_id || '',
+        username: request.profiles[0]?.username || '',
+        full_name: request.profiles[0]?.full_name || '',
+        avatar_url: request.profiles[0]?.avatar_url || ''
+      }
+    })))
   }
 
   useEffect(() => {

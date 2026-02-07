@@ -9,7 +9,7 @@ import createClient from '@/lib/supabase/client'
 import { RealtimeChannel } from '@supabase/supabase-js'
 
 export function useRealtimeSubscriptions(userId: string) {
-  const supabase = createClient()
+  const supabase = createClient
   const [tasks, setTasks] = useState<any[]>([])
   const [connected, setConnected] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -91,7 +91,7 @@ export function useRealtimeSubscriptions(userId: string) {
  * 共享看板 Realtime 订阅 Hook
  */
 export function useSharedBoardRealtime(boardId: string) {
-  const supabase = createClient()
+  const supabase = createClient
   const [tasks, setTasks] = useState<any[]>([])
   const [connected, setConnected] = useState(false)
 

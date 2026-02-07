@@ -13,14 +13,13 @@ interface Friend {
   profiles: {
     id: string
     username: string
+    full_name: string | null
+    avatar_url: string | null
+  }
 }
 
 interface FriendListProps {
   onFriendUpdated?: () => void
-}
-    full_name: string | null
-    avatar_url: string | null
-  }
 }
 
 interface FriendListProps {
@@ -40,10 +39,17 @@ export default function FriendList({ onDeleted }: FriendListProps) {
       .from('friendships')
       .select('friend_id, profiles(username, full_name, avatar_url)')
       .eq('user_id', user.id)
-      .innerJoin('profiles', 'friendships.friend_id', 'profiles.id')
-      .order('profiles.created_at', { ascending: false })
+      .order('created_at', { ascending: false })
 
-    setFriends(data || [])
+    setFriends((data || []).map(friend => ({
+      friend_id: friend.friend_id,
+      profiles: {
+        id: friend.friend_id,
+        username: friend.profiles[0]?.username || '',
+        full_name: friend.profiles[0]?.full_name || '',
+        avatar_url: friend.profiles[0]?.avatar_url || ''
+      }
+    })))
   }
 
   useEffect(() => {
