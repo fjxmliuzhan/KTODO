@@ -5,7 +5,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import createClient from '@/lib/supabase/client'
 import { RealtimeChannel } from '@supabase/supabase-js'
 
 export function useRealtimeSubscriptions(userId: string) {

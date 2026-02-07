@@ -4,7 +4,7 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import createClient from '@/lib/supabase/client'
 
 interface CreateSharedBoardProps {
   friends: any[]
@@ -12,7 +12,7 @@ interface CreateSharedBoardProps {
 }
 
 export default function CreateSharedBoard({ friends, onSuccess }: CreateSharedBoardProps) {
-  const supabase = createClient()
+  const supabase = createClient
   const [open, setOpen] = useState(false)
   const [boardName, setBoardName] = useState('')
   const [selectedFriend, setSelectedFriend] = useState('')

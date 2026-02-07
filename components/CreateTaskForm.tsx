@@ -4,7 +4,7 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import createClient from '@/lib/supabase/client'
 
 interface CreateTaskFormProps {
   boardId?: string | null
@@ -12,7 +12,7 @@ interface CreateTaskFormProps {
 }
 
 export default function CreateTaskForm({ boardId, onSuccess }: CreateTaskFormProps) {
-  const supabase = createClient()
+  const supabase = createClient
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [priority, setPriority] = useState<'low' | 'medium' | 'high'>('medium')

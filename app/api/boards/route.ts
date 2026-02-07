@@ -26,11 +26,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Name and friend_id are required' }, { status: 400 })
     }
 
-    // 使用 RPC
+    // 使用 RPC（添加类型断言）
     const { data: board, error } = await supabase.rpc('create_shared_board', {
-      p_board_name: name.trim(),
-      p_user_id: user.id,
-      p_friend_id: friend_id,
+      p_board_name: name.trim() as string,
+      p_user_id: user.id as string,
+      p_friend_id: friend_id as string,
     } as any)
 
     if (error) {

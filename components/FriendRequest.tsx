@@ -5,7 +5,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import createClient from '@/lib/supabase/client'
 import { Database } from '@/lib/supabase/types'
 
 interface PendingRequest {
@@ -24,7 +24,7 @@ interface FriendRequestProps {
 }
 
 export default function FriendRequest({ onAccept }: FriendRequestProps) {
-  const supabase = createClient()
+  const supabase = createClient
   const [requests, setRequests] = useState<PendingRequest[]>([])
   const [loading, setLoading] = useState(false)
 

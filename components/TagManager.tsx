@@ -5,7 +5,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import createClient from '@/lib/supabase/client'
 import { Database } from '@/lib/supabase/types'
 
 type Tag = Database['public']['Tables']['tags']['Row']
@@ -15,7 +15,7 @@ interface TagManagerProps {
 }
 
 export default function TagManager({ taskId }: TagManagerProps) {
-  const supabase = createClient()
+  const supabase = createClient
   const [tags, setTags] = useState<Tag[]>([])
   const [taskTags, setTaskTags] = useState<string[]>([])
   const [loading, setLoading] = useState(false)

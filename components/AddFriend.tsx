@@ -5,14 +5,14 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import createClient from '@/lib/supabase/client'
 
 interface AddFriendProps {
   onSent?: () => void
 }
 
 export default function AddFriend({ onSent }: AddFriendProps) {
-  const supabase = createClient()
+  const supabase = createClient
   const [username, setUsername] = useState('')
   const [searching, setSearching] = useState(false)
   const [searchResults, setSearchResults] = useState<any[]>([])

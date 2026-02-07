@@ -5,7 +5,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import createClient from '@/lib/supabase/client'
 import { Database } from '@/lib/supabase/types'
 
 interface Friend {
@@ -23,7 +23,7 @@ interface FriendListProps {
 }
 
 export default function FriendList({ onDeleted }: FriendListProps) {
-  const supabase = createClient()
+  const supabase = createClient
   const [friends, setFriends] = useState<Friend[]>([])
   const [loading, setLoading] = useState(false)
 

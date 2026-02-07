@@ -4,7 +4,7 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import createClient from '@/lib/supabase/client'
 
 interface TaskItemProps {
   task: any
@@ -14,7 +14,7 @@ interface TaskItemProps {
 }
 
 export default function TaskItem({ task, onUpdated, onMoveUp, onMoveDown }: TaskItemProps) {
-  const supabase = createClient()
+  const supabase = createClient
   const [editing, setEditing] = useState(false)
   const [title, setTitle] = useState(task.title)
   const [loading, setLoading] = useState(false)

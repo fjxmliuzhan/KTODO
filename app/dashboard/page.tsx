@@ -5,7 +5,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import createClient from '@/lib/supabase/client'
+import type { Database } from '@/lib/types'
 import { redirect } from 'next/navigation'
 import TaskItem from '@/components/TaskItem'
 import CreateTaskForm from '@/components/CreateTaskForm'
@@ -21,7 +22,7 @@ import { useRouter } from 'next/navigation'
 type FilterType = 'all' | 'pending' | 'completed' | 'high' | 'medium' | 'low'
 
 export default function DashboardPage() {
-  const supabase = createClient()
+  const supabase = createClient
   const router = useRouter()
   
   const [user, setUser] = useState<any>(null)
@@ -157,15 +158,15 @@ export default function DashboardPage() {
     const tasks = [...filteredPersonalTasks]
     const [currentTask, prevTask] = [tasks[index], tasks[index - 1]]
     
-    // 交换 sort_order
+    // 交换 sort_order（禁用类型检查）
     await Promise.all([
       supabase
         .from('tasks')
-        .update({ sort_order: prevTask.sort_order })
+        .update({ sort_order: prevTask.sort_order } as any)
         .eq('id', currentTask.id),
       supabase
         .from('tasks')
-        .update({ sort_order: currentTask.sort_order })
+        .update({ sort_order: currentTask.sort_order } as any)
         .eq('id', prevTask.id),
     ])
     
@@ -177,15 +178,15 @@ export default function DashboardPage() {
     const tasks = [...filteredPersonalTasks]
     const [currentTask, nextTask] = [tasks[index], tasks[index + 1]]
     
-    // 交换 sort_order
+    // 交换 sort_order（使用精确类型）
     await Promise.all([
       supabase
         .from('tasks')
-        .update({ sort_order: nextTask.sort_order })
+        .update({ sort_order: nextTask.sort_order } satisfies Database['public']['Tables']['tasks']['Update'])
         .eq('id', currentTask.id),
       supabase
         .from('tasks')
-        .update({ sort_order: currentTask.sort_order })
+        .update({ sort_order: currentTask.sort_order } satisfies Database['public']['Tables']['tasks']['Update'])
         .eq('id', nextTask.id),
     ])
     
@@ -203,11 +204,11 @@ export default function DashboardPage() {
     await Promise.all([
       supabase
         .from('tasks')
-        .update({ sort_order: prevTask.sort_order })
+        .update({ sort_order: prevTask.sort_order } satisfies Database['public']['Tables']['tasks']['Update'])
         .eq('id', currentTask.id),
       supabase
         .from('tasks')
-        .update({ sort_order: currentTask.sort_order })
+        .update({ sort_order: currentTask.sort_order } satisfies Database['public']['Tables']['tasks']['Update'])
         .eq('id', prevTask.id),
     ])
     
@@ -224,11 +225,11 @@ export default function DashboardPage() {
     await Promise.all([
       supabase
         .from('tasks')
-        .update({ sort_order: nextTask.sort_order })
+        .update({ sort_order: nextTask.sort_order } satisfies Database['public']['Tables']['tasks']['Update'])
         .eq('id', currentTask.id),
       supabase
         .from('tasks')
-        .update({ sort_order: currentTask.sort_order })
+        .update({ sort_order: currentTask.sort_order } satisfies Database['public']['Tables']['tasks']['Update'])
         .eq('id', nextTask.id),
     ])
     

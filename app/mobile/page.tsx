@@ -4,13 +4,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import createClient from '@/lib/supabase/client'
 import { redirect } from 'next/navigation'
 
 type FilterType = 'all' | 'pending' | 'completed' | 'high' | 'medium' | 'low'
 
 export default function MobileDashboardPage() {
-  const supabase = createClient()
+  const supabase = createClient
   const router = useRouter()
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
@@ -324,7 +324,7 @@ export default function MobileDashboardPage() {
  * 移动端任务项组件
  */
 function MobileTaskItem({ task, onUpdated }: { task: any; onUpdated: () => void }) {
-  const supabase = createClient()
+  const supabase = createClient
   const [showMenu, setShowMenu] = useState(false)
 
   const handleToggleComplete = async () => {
@@ -424,7 +424,7 @@ function MobileBoardCard({ board, onUpdated }: { board: any; onUpdated: () => vo
 
   useEffect(() => {
     const loadTasks = async () => {
-      const supabase = createClient()
+      const supabase = createClient
       const { data } = await supabase
         .from('tasks')
         .select('*')
@@ -474,7 +474,7 @@ function MobileBoardCard({ board, onUpdated }: { board: any; onUpdated: () => vo
  * 移动端创建任务表单
  */
 function MobileCreateTaskForm({ onSuccess }: { onSuccess: () => void }) {
-  const supabase = createClient()
+  const supabase = createClient
   const [title, setTitle] = useState('')
   const [priority, setPriority] = useState<'low' | 'medium' | 'high'>('medium')
   const [loading, setLoading] = useState(false)
