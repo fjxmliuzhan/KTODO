@@ -39,7 +39,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Title is required' }, { status: 400 })
     }
 
-    // 使用 RPC
+    // 使用 RPC（添加类型断言修复构建错误）
     const { data: task, error } = await supabase.rpc('create_task', {
       p_user_id: user.id as string,
       p_title: title.trim() as string,
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
       p_priority: (priority || 'medium') as string,
       p_shared_board_id: (shared_board_id || null) as string | null,
       p_sort_order: sort_order as number,
-    })
+    } as any)
 
     if (error) throw error
 
@@ -73,7 +73,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: 'Task ID is required' }, { status: 400 })
     }
 
-    // 使用 RPC
+    // 使用 RPC（添加类型断言修复构建错误）
     const { data: task, error } = await supabase.rpc('update_task', {
       p_task_id: id as string,
       p_user_id: user.id as string,
@@ -83,7 +83,7 @@ export async function PATCH(request: Request) {
       p_completed: completed ? completed as boolean : null,
       p_completed_at: completed ? (new Date().toISOString()) as string : null,
       p_sort_order: sort_order ? sort_order as number : null,
-    })
+    } as any)
 
     if (error) {
       if (error.message.includes('not found')) {
@@ -118,11 +118,11 @@ export async function DELETE(request: Request) {
   }
 
   try {
-    // 使用 RPC
+    // 使用 RPC（添加类型断言修复构建错误）
     const { error } = await supabase.rpc('delete_task', {
       p_task_id: taskId as string,
       p_user_id: user.id as string,
-    })
+    } as any)
 
     if (error) {
       if (error.message.includes('not found')) {
