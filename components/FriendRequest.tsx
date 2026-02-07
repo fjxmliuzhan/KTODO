@@ -8,6 +8,10 @@ import { useState, useEffect } from 'react'
 import createClient from '@/lib/supabase/client'
 import { Database } from '@/lib/supabase/types'
 
+interface FriendRequestProps {
+  onRequestSent?: () => void
+}
+
 interface PendingRequest {
   id: string
   sender_id: string

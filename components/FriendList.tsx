@@ -13,6 +13,11 @@ interface Friend {
   profiles: {
     id: string
     username: string
+}
+
+interface FriendListProps {
+  onFriendUpdated?: () => void
+}
     full_name: string | null
     avatar_url: string | null
   }
