@@ -56,9 +56,9 @@ export async function GET() {
   }
 
   try {
-    // 使用 SQL RPC
+    // 使用 SQL RPC（添加类型断言）
     const { data: boards, error } = await supabase.rpc('get_user_boards', {
-      p_user_id: user.id,
+      p_user_id: user.id as string,
     } as any)
 
     if (error) throw error
