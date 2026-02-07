@@ -39,11 +39,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Username is required' }, { status: 400 })
     }
 
-    // 使用 RPC，直接传递
+    // 使用 RPC，直接传递（添加类型断言修复构建错误）
     const { data: request, error } = await supabase.rpc('send_friend_request', {
-      p_sender_id: user.id,
-      p_username: receiver_username,
-    })
+      p_sender_id: user.id as string,
+      p_username: receiver_username as string,
+    } as any)
 
     if (error) {
       if (error.message.includes('not found')) {
@@ -86,11 +86,11 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ error: 'Request ID is required' }, { status: 400 })
     }
 
-    // 使用 RPC，直接传递
+    // 使用 RPC，直接传递（添加类型断言修复构建错误）
     const { data: result, error } = await supabase.rpc('accept_friend_request', {
-      p_request_id: request_id,
-      p_user_id: user.id,
-    })
+      p_request_id: request_id as string,
+      p_user_id: user.id as string,
+    } as any)
 
     if (error) {
       if (error.message.includes('not found')) {
@@ -127,11 +127,11 @@ export async function DELETE(req: Request) {
   }
 
   try {
-    // 使用 RPC，直接传递
+    // 使用 RPC，直接传递（添加类型断言修复构建错误）
     const { error } = await supabase.rpc('delete_friend', {
-      p_user_id: user.id,
-      p_friend_id: friend_id,
-    })
+      p_user_id: user.id as string,
+      p_friend_id: friend_id as string,
+    } as any)
 
     if (error) {
       if (error.message.includes('not found')) {
